@@ -189,7 +189,7 @@ export class Rubocop {
     private executeRubocop(
         args: string[],
         fileContents: string,
-        options: cp.ExecFileOptions,
+        options: cp.ExecOptions,
         cb: (err: Error, stdout: string, stderr: string) => void): cp.ChildProcess {
         let child;
         if (this.config.useBundler) {
