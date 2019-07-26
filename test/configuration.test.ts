@@ -18,6 +18,7 @@ vsStub.workspace.getConfiguration = (section?: string, resource?: vsStub.Uri | n
     onSave: true,
     useBundler: false,
     suppressRubocopWarnings: false,
+    useStandardrb: false,
   };
 
   return {
@@ -61,12 +62,21 @@ describe('RubocopConfig', () => {
       });
     });
 
+    describe('.useStandardrb', () => {
+      it('is set to false', () => {
+        expect(getConfig()).to.have.property('useStandardrb', false);
+      });
+    });
+
     describe('.command', () => {
       describe('win32 platform', () => {
         beforeEach(() => {
           this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
           Object.defineProperty(process, 'platform', {
             value: 'win32',
+          });
+          Object.defineProperty(process, 'useStandardrb', {
+            value: false,
           });
         });
         afterEach(() => {
@@ -89,6 +99,9 @@ describe('RubocopConfig', () => {
           this.originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
           Object.defineProperty(process, 'platform', {
             value: 'commodore64',
+          });
+          Object.defineProperty(process, 'useStandardrb', {
+            value: false,
           });
         });
         afterEach(() => {
