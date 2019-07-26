@@ -9,7 +9,8 @@ export interface RubocopConfig {
     onSave: boolean;
     configFilePath: string;
     useBundler: boolean;
-    suppressRubocopWarnings: boolean
+    suppressRubocopWarnings: boolean;
+    useStandardrb: boolean;
 }
 
 const detectBundledRubocop: () => boolean = () => {
@@ -45,13 +46,18 @@ const autodetectExecutePath: (cmd: string) => string = cmd => {
  */
 export const getConfig: () => RubocopConfig = () => {
     const win32 = process.platform === 'win32';
-    const cmd = win32 ? 'rubocop.bat' : 'rubocop';
+    let cmd = win32 ? 'rubocop.bat' : 'rubocop';
     const conf = vs.workspace.getConfiguration('ruby.rubocop');
     let useBundler = conf.get('useBundler', false);
     let configPath = conf.get('executePath', '');
+    let useStandardrb = conf.get('useStandardrb', false);
     let suppressRubocopWarnings = conf.get('suppressRubocopWarnings', false)
     let command;
 
+    // is set to standardrb change the cmd
+    if( useStandardrb) {
+        cmd = 'standardrb';
+    }
     // if executePath is present in workspace config, use it.
     if (configPath.length !== 0) {
         command = configPath + cmd;
@@ -72,6 +78,7 @@ export const getConfig: () => RubocopConfig = () => {
         onSave: conf.get('onSave', true),
         useBundler,
         suppressRubocopWarnings,
+        useStandardrb,
     };
 };
 
